@@ -14,8 +14,9 @@ export class MyComponent {
   @Event() onUploadCompleted: EventEmitter<boolean>;
 
   public onInputChange(files: any) {
-    const imageFile = files[0];
-    if (files.length > 0) {
+    // check if 1 image is uploaded
+    if (files.length === 1) {
+      const imageFile = files[0];
       // check if the user isn't trying to upload a file larger then the MAX_UPLOAD_SIZE
       if (!this.checkFileSize(imageFile.size)) {
         console.error('Maximum file size exceeded. Max file size is: ' + MAX_UPLOAD_SIZE);
@@ -26,7 +27,18 @@ export class MyComponent {
         console.error('File type is not allowed');
         return false;
       }
-    
+
+      // upload image
+      this.uploadImage(imageFile);
+    } else {
+      console.error(files.length === 0 ? 'NO IMAGE UPLOADED' : 'YOU CAN ONLY UPLOAD ONE IMAGE AT THE TIME');
+      return false;
+    }
+  }
+
+  private uploadImage(file) {
+    console.log(typeof file);
+// create a new instance of HTML5 FileReader api to handle uploading
       const reader = new FileReader();
 
       reader.onloadstart = () => {
@@ -47,11 +59,7 @@ export class MyComponent {
         console.error('something went wrong...', err);
         this.onUploadCompleted.emit(false);
       };
-      reader.readAsDataURL(files[0]);
-    }else{
-      console.log('NO FILE UPLOADED');
-      return false;
-    }
+      reader.readAsDataURL(file);
   }
 
   private checkFileSize(size: number): boolean {
