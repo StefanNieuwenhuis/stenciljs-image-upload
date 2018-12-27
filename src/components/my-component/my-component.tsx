@@ -51,7 +51,7 @@ export class MyComponent {
     };
 
     reader.onloadend = () => {
-      console.log('uploading finished, emitting event to the outside world');
+      console.log('uploading finished, emitting an image blob to the outside world');
       this.onUploadCompleted.emit(file);
     };
 
