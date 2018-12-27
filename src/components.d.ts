@@ -8,13 +8,16 @@
 import '@stencil/core';
 
 
+import {
+  EventEmitter,
+} from '@stencil/core';
 
 
 export namespace Components {
 
   interface MyComponent {}
   interface MyComponentAttributes extends StencilHTMLAttributes {
-    'onOnUploadCompleted'?: (event: CustomEvent<boolean>) => void;
+    'onOnUploadCompleted'?: (event: CustomEvent<Blob>) => void;
   }
 }
 

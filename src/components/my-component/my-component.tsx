@@ -11,7 +11,7 @@ const ALLOWED_FILE_TYPES = 'image.*';
 export class MyComponent {
 
   @Element() private elementHost: HTMLElement;
-  @Event() onUploadCompleted: EventEmitter<boolean>;
+  @Event() onUploadCompleted: EventEmitter<Blob>;
 
   public onInputChange(files: FileList) {
     // check if 1 image is uploaded
@@ -52,12 +52,11 @@ export class MyComponent {
 
     reader.onloadend = () => {
       console.log('uploading finished, emitting event to the outside world');
-      this.onUploadCompleted.emit(true);
+      this.onUploadCompleted.emit(file);
     };
 
     reader.onerror = (err) => {
       console.error('something went wrong...', err);
-      this.onUploadCompleted.emit(false);
     };
     reader.readAsDataURL(file);
   }
