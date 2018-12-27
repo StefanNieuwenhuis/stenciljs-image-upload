@@ -10,7 +10,7 @@ const ALLOWED_FILE_TYPES = 'image.*';
 })
 export class MyComponent {
 
-  @Element() private imagePreview: HTMLElement;
+  @Element() private elementHost: HTMLElement;
   @Event() onUploadCompleted: EventEmitter<boolean>;
 
   public onInputChange(files: FileList) {
@@ -46,7 +46,7 @@ export class MyComponent {
     }
 
     reader.onload = () => {
-      const imagePreviewContainer: HTMLElement = this.imagePreview.shadowRoot.querySelector('#image-preview');
+      const imagePreviewContainer: HTMLElement = this.elementHost.shadowRoot.querySelector('#image-preview');
       imagePreviewContainer.style.backgroundImage = `url(${reader.result})`;
     };
 
