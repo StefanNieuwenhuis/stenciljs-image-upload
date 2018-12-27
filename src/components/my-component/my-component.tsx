@@ -13,7 +13,7 @@ export class MyComponent {
   @Element() private imagePreview: HTMLElement;
   @Event() onUploadCompleted: EventEmitter<boolean>;
 
-  public onInputChange(files: any) {
+  public onInputChange(files: FileList) {
     // check if 1 image is uploaded
     if (files.length === 1) {
       const imageFile = files[0];
@@ -38,28 +38,28 @@ export class MyComponent {
 
   private uploadImage(file) {
     console.log(typeof file);
-// create a new instance of HTML5 FileReader api to handle uploading
-      const reader = new FileReader();
+    // create a new instance of HTML5 FileReader api to handle uploading
+    const reader = new FileReader();
 
-      reader.onloadstart = () => {
-        console.log('started uploading');
-      }
+    reader.onloadstart = () => {
+      console.log('started uploading');
+    }
 
-      reader.onload = () => {
-        const imagePreviewContainer: HTMLElement = this.imagePreview.shadowRoot.querySelector('#image-preview');
-        imagePreviewContainer.style.backgroundImage = `url(${reader.result})`;
-      };
+    reader.onload = () => {
+      const imagePreviewContainer: HTMLElement = this.imagePreview.shadowRoot.querySelector('#image-preview');
+      imagePreviewContainer.style.backgroundImage = `url(${reader.result})`;
+    };
 
-      reader.onloadend = () => {
-        console.log('uploading finished, emitting event to the outside world');
-        this.onUploadCompleted.emit(true);
-      };
+    reader.onloadend = () => {
+      console.log('uploading finished, emitting event to the outside world');
+      this.onUploadCompleted.emit(true);
+    };
 
-      reader.onerror = (err) => {
-        console.error('something went wrong...', err);
-        this.onUploadCompleted.emit(false);
-      };
-      reader.readAsDataURL(file);
+    reader.onerror = (err) => {
+      console.error('something went wrong...', err);
+      this.onUploadCompleted.emit(false);
+    };
+    reader.readAsDataURL(file);
   }
 
   private checkFileSize(size: number): boolean {
