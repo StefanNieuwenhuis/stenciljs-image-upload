@@ -15,8 +15,13 @@ import {
 
 export namespace Components {
 
-  interface MyComponent {}
+  interface MyComponent {
+    'label': string;
+    'maxUploadSize': number;
+  }
   interface MyComponentAttributes extends StencilHTMLAttributes {
+    'label'?: string;
+    'maxUploadSize'?: number;
     'onOnUploadCompleted'?: (event: CustomEvent<Blob>) => void;
   }
 }

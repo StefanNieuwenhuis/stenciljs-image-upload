@@ -1,14 +1,18 @@
 .image-upload {
-  position: relative;
   max-width: 205px;
   margin: 50px auto;
+}
+
+.image-upload__wrapper {
+  position: relative;
 }
 
 .image-upload__edit {
   position: absolute;
   top: 10px;
-  right: 12px;
+  right: -22px;
   z-index: 1;
+  display: flex;
 }
 
 .image-upload__edit label,
@@ -19,7 +23,7 @@
 
 .image-upload__edit label {
   display: block;
-
+  position: relative;
   background: #fff;
   border: 1px solid transparent;
   border-radius: 100%;
@@ -27,7 +31,6 @@
   cursor: pointer;
   font-weight: normal;
   transition: all .2s ease-in-out;
-
   z-index: 1;
 }
 
@@ -40,10 +43,22 @@ label:active{
   background: red;
 }
 
-.image-upload__edit label:after {
+.image-upload__edit .editButton:after {
   content: '✎';
   position: absolute;
-  top: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+}
+
+.image-upload__edit .closeButton:after {
+  content: '\00d7';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   left: 0;
   right: 0;
   margin: auto;
@@ -73,7 +88,15 @@ label:active{
   height: 100%;
   width: 100%;
   border-radius: 100%;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.custom-label {
+  margin: 20px 0;
+}
+
+.custom-label .label {
+  font-size: 18px;
 }

@@ -1,6 +1,6 @@
-import { Component, Element, Event, EventEmitter } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Prop, State } from '@stencil/core';
 
-const MAX_UPLOAD_SIZE = 1024; // bytes
+// const maxUploadSize = 1024; // bytes
 const ALLOWED_FILE_TYPES = 'image.*';
 
 @Component({
@@ -9,17 +9,31 @@ const ALLOWED_FILE_TYPES = 'image.*';
   shadow: true
 })
 export class MyComponent {
-
-  @Element() private elementHost: HTMLElement;
+  @Prop() public label: string;
+  @Prop() public maxUploadSize: number; // in bytes
+  @State() imgUploaded: boolean = false;
   @Event() onUploadCompleted: EventEmitter<Blob>;
+  @Element() private elementHost: HTMLElement;
+  private fileInputRef: HTMLElement;
+
+
+  public onRemoveImage(event: any): void {
+    let imagePreviewContainer: HTMLElement = this.elementHost.shadowRoot.querySelector('#image-preview');
+    imagePreviewContainer.style.backgroundImage = null;
+    this.imgUploaded = false;
+    // console.log(this.fileInputRef.attributes[1].nodeValue)
+    this.fileInputRef.attributes[1].nodeValue = ""
+    this.fileInputRef.attributes[1].nodeValue = "file"
+    event.preventDefault()
+  }
 
   public onInputChange(files: FileList) {
     // check if 1 image is uploaded
     if (files.length === 1) {
       const imageFile = files[0];
-      // check if the user isn't trying to upload a file larger then the MAX_UPLOAD_SIZE
+      // check if the user isn't trying to upload a file larger then the maxUploadSize
       if (!this.checkFileSize(imageFile.size)) {
-        console.error('Maximum file size exceeded. Max file size is: ' + MAX_UPLOAD_SIZE);
+        console.error('Maximum file size exceeded. Max file size is: ' + this.maxUploadSize);
         return false;
       }
       // check if the user isn't trying to upload anything else then an image
@@ -64,7 +78,12 @@ export class MyComponent {
   }
 
   private checkFileSize(size: number): boolean {
-    return (size / MAX_UPLOAD_SIZE / MAX_UPLOAD_SIZE) <= MAX_UPLOAD_SIZE;
+    // check if size is greater than maxUploadSize
+    if (size > this.maxUploadSize) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private checkFileType(type: string): boolean {
@@ -72,17 +91,33 @@ export class MyComponent {
   }
 
   render() {
-    return <div class="image-upload">
-      <div class="image-upload__edit">
-        <label htmlFor="file"></label>
-        <input type="file" name="files[]" id="file" accept="image/*" class="image-upload__input"
-          onChange={($event: any) => this.onInputChange($event.target.files)} />
+    return (
+    <div class="image-upload">
+      <div class='custom-label'>
+        <label class="label">
+          {this.label}
+        </label>
       </div>
+      <div class="image-upload__wrapper">
+        <div class="image-upload__edit">
+          <label htmlFor="file" class="editButton"></label>
+          <label htmlFor="file" class="closeButton" onClick={(event: any) => this.onRemoveImage(event)}></label>
+          <input 
+            type="file" 
+            name="files[]" 
+            id="file" 
+            accept="image/*" 
+            class="image-upload__input"
+            ref={(el: HTMLElement) => (this.fileInputRef = el)}
+            onChange={($event: any) => this.onInputChange($event.target.files)} 
+            />
+        </div>
 
-      <div class="image-upload__preview">
-        <div id="image-preview"></div>
+        <div class="image-upload__preview">
+          <div id="image-preview"></div>
+        </div>
       </div>
-    </div>;
+    </div>);
   }
 }
 
